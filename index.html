@@ -24,6 +24,7 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
       max-width: 400px;
       width: 90%;
+      z-index: 5;
     }
 
     h1 {
@@ -34,10 +35,7 @@
     .buttons {
       margin-top: 30px;
       position: relative;
-      height: 80px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
+      height: 100px; /* Platz für den weglaufenden Button */
     }
 
     button {
@@ -46,31 +44,32 @@
       border: none;
       border-radius: 30px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      position: absolute; /* Wichtig für das Bewegen */
+      transition: all 0.1s ease;
     }
 
     #yes {
       background: #ff4d6d;
       color: white;
-      z-index: 10;
+      left: 10%;
     }
 
     #no {
       background: #ccc;
       color: black;
-      position: absolute;
+      left: 60%;
     }
 
     .heart {
       position: absolute;
       font-size: 24px;
-      z-index: 999;
       animation: float 3s linear forwards;
+      z-index: 10;
     }
 
     @keyframes float {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+      from { transform: translateY(0) scale(1); opacity: 1; }
+      to { transform: translateY(-100vh) scale(1.5); opacity: 0; }
     }
   </style>
 </head>
@@ -94,32 +93,15 @@
   const noBtn = document.getElementById("no");
   const music = document.getElementById("music");
 
-  // Musik-Funktion
-  function playMusic() {
-    music.volume = 0.7;
-    music.play().catch(err => console.log("Audio konnte nicht geladen werden:", err));
-  }
-
-  // NO-Button rennt weg
-  noBtn.addEventListener("mouseover", () => {
-    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-    
-    noBtn.style.position = "fixed";
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  });
-
-  // YES-Button Event
+  // Musik starten beim Klick auf YES
   yesBtn.addEventListener("click", () => {
-    // Musik starten
-    playMusic();
+    music.volume = 0.7;
+    music.play().catch(err => console.log("Audio-Fehler:", err));
 
-    // Text ändern
     document.getElementById("card").innerHTML =
       "<h1>YAAAY!! 💕😍<br>Best Valentine ever!</h1>";
 
-    // Konfetti-Herzen Regen
+    // Herz-Regen
     for (let i = 0; i < 50; i++) {
       setTimeout(() => {
         const heart = document.createElement("div");
@@ -127,12 +109,20 @@
         heart.innerHTML = "❤️";
         heart.style.left = Math.random() * 100 + "vw";
         heart.style.top = "100vh";
-        heart.style.fontSize = (Math.random() * 20 + 20) + "px";
         document.body.appendChild(heart);
-        
         setTimeout(() => heart.remove(), 3000);
-      }, i * 50);
+      }, i * 100);
     }
+  });
+
+  // Der "No"-Button rennt weg
+  noBtn.addEventListener("mouseover", () => {
+    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    
+    noBtn.style.position = "fixed"; // Damit er überall auf dem Screen hin kann
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
   });
 </script>
 
