@@ -11,7 +11,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: "Comic Sans MS", cursive, sans-serif;
+      font-family: Arial, sans-serif;
       overflow: hidden;
     }
 
@@ -40,7 +40,6 @@
       border: none;
       border-radius: 30px;
       cursor: pointer;
-      transition: 0.2s;
       position: absolute;
     }
 
@@ -70,7 +69,7 @@
 </head>
 <body>
 
-<div class="card">
+<div class="card" id="card">
   <h1>Alessia,<br>will you be my Valentine? 💖</h1>
 
   <div class="buttons">
@@ -79,41 +78,31 @@
   </div>
 </div>
 
-<audio id="music">
+<audio id="music" preload="auto">
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-  const noBtn = document.getElementById("no");
   const yesBtn = document.getElementById("yes");
+  const noBtn = document.getElementById("no");
   const music = document.getElementById("music");
 
-  const noTexts = [
-    "Are you sure? 🥺",
-    "Really really sure?",
-    "Think again 😭",
-    "Last chance!",
-    "You can't escape 😈"
-  ];
-
-  let noCount = 0;
+  // wichtig: Audio einmal initialisieren
+  document.body.addEventListener("click", () => {
+    music.load();
+  }, { once: true });
 
   noBtn.addEventListener("mouseover", () => {
     const x = Math.random() * 200 - 100;
     const y = Math.random() * 100 - 50;
     noBtn.style.transform = `translate(${x}px, ${y}px)`;
-
-    if (noCount < noTexts.length) {
-      noBtn.innerText = noTexts[noCount];
-      noCount++;
-    }
   });
 
   yesBtn.addEventListener("click", () => {
     music.volume = 0.7;
-    music.play();
+    music.play().catch(err => console.log(err));
 
-    document.querySelector(".card").innerHTML =
+    document.getElementById("card").innerHTML =
       "<h1>YAAAY!! 💕😍<br>Best Valentine ever!</h1>";
 
     for (let i = 0; i < 40; i++) {
@@ -123,7 +112,6 @@
       heart.style.left = Math.random() * window.innerWidth + "px";
       heart.style.top = window.innerHeight + "px";
       document.body.appendChild(heart);
-
       setTimeout(() => heart.remove(), 3000);
     }
   });
