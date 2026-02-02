@@ -1,127 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Valentine?</title>
-  <style>
-    body {
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: "Comic Sans MS", cursive, sans-serif;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine?</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            text-align: center;
+        }
 
-    .card {
-      background: white;
-      padding: 40px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      position: relative;
-    }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 400px;
+            z-index: 10;
+        }
 
-    h1 {
-      font-size: 2.2em;
-      color: #ff4d6d;
-    }
+        h1 { color: #ff4d6d; margin-bottom: 30px; }
 
-    .buttons {
-      margin-top: 30px;
-      position: relative;
-      height: 60px;
-    }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            height: 50px;
+        }
 
-    button {
-      padding: 12px 25px;
-      font-size: 1.1em;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: 0.2s;
-      position: absolute;
-    }
+        button {
+            padding: 10px 25px;
+            font-size: 18px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-    #yes {
-      background: #ff4d6d;
-      color: white;
-      left: 30%;
-    }
+        #yesBtn { background-color: #ff4d6d; color: white; }
 
-    #no {
-      background: #ccc;
-      color: black;
-      left: 55%;
-    }
+        #noBtn { 
+            background-color: #f0f0f0; 
+            color: #333; 
+            position: relative; 
+            transition: 0.2s;
+        }
 
-    .heart {
-      position: absolute;
-      color: red;
-      font-size: 24px;
-      animation: float 3s linear forwards;
-    }
+        .heart {
+            position: fixed;
+            top: -1vh;
+            transform: translateY(0);
+            animation: fall 3s linear forwards;
+            z-index: 1;
+        }
 
-    @keyframes float {
-      from { transform: translateY(0); opacity: 1; }
-      to { transform: translateY(-200px); opacity: 0; }
-    }
-  </style>
+        @keyframes fall {
+            to { transform: translateY(105vh); }
+        }
+    </style>
 </head>
 <body>
 
-<div class="card">
-  <h1>Alessia,<br>will you be my Valentine? 💖</h1>
+    <div class="container" id="main-card">
+        <h1>Alessia, will you be my Valentine? 💖</h1>
+        <div class="btn-group">
+            <button id="yesBtn">Yes 💘</button>
+            <button id="noBtn">No 😢</button>
+        </div>
+    </div>
 
-  <div class="buttons">
-    <button id="yes">Yes 💘</button>
-    <button id="no">No 😢</button>
-  </div>
-</div>
+    <audio id="bgMusic" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
 
-<script>
-  const noBtn = document.getElementById("no");
-  const yesBtn = document.getElementById("yes");
+    <script>
+        const yesBtn = document.querySelector('#yesBtn');
+        const noBtn = document.querySelector('#noBtn');
+        const music = document.querySelector('#bgMusic');
 
-  const noTexts = [
-    "Are you sure? 🥺",
-    "Really really sure?",
-    "Think again 😭",
-    "Last chance!",
-    "You can't escape 😈"
-  ];
+        // Nein-Button weglaufen lassen
+        const moveNo = () => {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        };
 
-  let noCount = 0;
+        noBtn.addEventListener('mouseover', moveNo);
+        noBtn.addEventListener('touchstart', moveNo);
 
-  noBtn.addEventListener("mouseover", () => {
-    const x = Math.random() * 200 - 100;
-    const y = Math.random() * 100 - 50;
-    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+        // Ja-Button Klick
+        yesBtn.addEventListener('click', () => {
+            // Musik-Startversuch
+            music.play().catch(() => console.log("Musik braucht Interaktion"));
 
-    if (noCount < noTexts.length) {
-      noBtn.innerText = noTexts[noCount];
-      noCount++;
-    }
-  });
-
-  yesBtn.addEventListener("click", () => {
-    document.querySelector(".card").innerHTML =
-      "<h1>YAAAY!! 💕😍<br>Best Valentine ever!</h1>";
-
-    for (let i = 0; i < 30; i++) {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerHTML = "❤️";
-      heart.style.left = Math.random() * window.innerWidth + "px";
-      heart.style.top = window.innerHeight + "px";
-      document.body.appendChild(heart);
-
-      setTimeout(() => heart.remove(), 3000);
-    }
-  });
-</script>
-
+            document.querySelector('#main-card').innerHTML = "<h1>YAAAY!! 💕😍<br>Best Valentine ever!</h1>";
+            
+            // Herzchen-Regen
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = "❤️";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.fontSize = Math.random() * 20 + 20 + "px";
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 3000);
+            }, 100);
+        });
+    </script>
 </body>
 </html>
